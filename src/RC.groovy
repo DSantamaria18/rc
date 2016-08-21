@@ -19,18 +19,42 @@ class RC {
         String query = """SELECT site.domain FROM site ORDER BY site.id """
         def res = thisEnv.getQuery(query)
         String[] result = res.findAll().collect() {it.domain}
-        println("   :: SITES: ${result}")
+        //println("   :: SITES: ${result}")
         return result
     }
 
-    def getURL() {
-        String withAttendantsQuery = "and entrada.id in ( select entrada.id from entrada, tipo, evento where entrada.tipo_id = tipo.id and tipo.evento_id = evento.id and evento.attendant_type_id is not null " +
+    def getURL(int ticketType, Boolean pum, Boolean withAttendants) {
+        String q1 = """select entrada.id from entrada, tipo, evento where entrada.tipo_id = tipo.id and tipo.evento_id = evento.id and entrada.estado = 0
+                    and entrada.cantidad_disponible > 0 """
+
+        String q2 = " and entrada.fecha_limite_internacional >= now() and evento.fecha_ultimo_minuto >= now() " +
+                "and evento.date >= now() and evento.local_address_required = false " +
+                "and not exists (SELECT parent.local_address_required FROM categoria AS node, categoria AS parent " +
+                "WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.id = evento.categoria_principal_id " +
+                "and parent.local_address_required = true GROUP BY parent.id) "
+
+        String ticketTypeQuery = ""
+        if (ticketType == 0 || ticketType == 2) {
+            ticketTypeQuery = " and entrada.tipo_entrada = ${ticketType}"
+        }
+
+        String pumQuery = ""
+
+        if (pum) {
+            pumQuery = ""
+        }else {
+            pumQuery = " and entrada.pum = false "
+        }
+        String withAttendantsQuery = " and entrada.id in ( select entrada.id from entrada, tipo, evento where entrada.tipo_id = tipo.id and tipo.evento_id = evento.id and evento.attendant_type_id is not null " +
                 "union SELECT entrada.id FROM entrada, tipo, evento, categoria WHERE entrada.tipo_id = tipo.id AND tipo.evento_id = evento.id AND evento.categoria_principal_id = categoria.id and categoria.attendant_type_id is not null " +
                 "union SELECT entrada.id FROM categoria AS node , categoria AS parent ,entrada, tipo, evento, categoria " +
                 "WHERE entrada.tipo_id = tipo.id and tipo.evento_id = evento.id and evento.categoria_principal_id = categoria.id and " +
                 "node.lft BETWEEN parent.lft AND parent.rgt AND node.id = evento.categoria_principal_id and categoria.attendant_type_id is not null GROUP BY parent.id) "
 
-        def res = thisEnv.getQuery("Select * from site limit 1")
+        String query = q1 + ticketTypeQuery + q2 + pumQuery + withAttendantsQuery
+        //def res = thisEnv.getQuery("Select * from site limit 1")
+        def res = thisEnv.getQuery(query)
+        println("   :: QUERY: ${query}")
         println("   :: RESULTADO: ${res}")
     }
 

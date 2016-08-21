@@ -46,7 +46,7 @@ public class RCValidator {
 
                 //Sites
                 rc = new RC();
-                rc.getURL();
+                rc.getURL(ticketType, pum, withAttendants);
             }
         });
     }
@@ -69,6 +69,5 @@ public class RCValidator {
         for (int i = 0; i < dominios.length; i++) {
             comboSites.addItem(dominios[i]);
         }
-
     }
 }
