@@ -3,20 +3,26 @@
  */
 
 import Environment
+import RCValidator
 
 class RC {
 
+    def thisEnv = Environment.getInstance()
+
     def start() {
         Environment entorno = Environment.createInstance(environment: Env.QA)
-        RCValidator.main()
+        RCValidator rcValidator = new RCValidator()
+        rcValidator.main()
+    }
+
+    String[] getSitesList(){
+        String query = """SELECT site.domain FROM site ORDER BY site.id """
+        def res = thisEnv.getQuery(query)
+        String[] result = res.findAll().collect() {it.domain}
+        return result
     }
 
     def getURL() {
-        println("   :: BUSCANDO...")
-        def thisEnv = Environment.getInstance()
-
-
-
         String withAttendantsQuery = "and entrada.id in ( select entrada.id from entrada, tipo, evento where entrada.tipo_id = tipo.id and tipo.evento_id = evento.id and evento.attendant_type_id is not null " +
                 "union SELECT entrada.id FROM entrada, tipo, evento, categoria WHERE entrada.tipo_id = tipo.id AND tipo.evento_id = evento.id AND evento.categoria_principal_id = categoria.id and categoria.attendant_type_id is not null " +
                 "union SELECT entrada.id FROM categoria AS node , categoria AS parent ,entrada, tipo, evento, categoria " +

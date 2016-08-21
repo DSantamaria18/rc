@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.event.ContainerAdapter;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -18,7 +19,10 @@ public class RCValidator {
     private JButton BUSCARButton;
     private JPanel RCPanel;
     private JLabel lblSites;
-    private JComboBox comboBox1;
+    private JComboBox comboSites;
+
+    private RC rc = new RC();
+    DefaultComboBoxModel model = new DefaultComboBoxModel();
 
     public RCValidator() {
         BUSCARButton.addMouseListener(new MouseAdapter() {
@@ -41,22 +45,29 @@ public class RCValidator {
                 boolean lar = chkLar.isSelected();
                 boolean withAttendants = chkAttendants.isSelected();
 
-                // SITES
-
-                if (checkBox1.isSelected())
-
-
-                RC rc = new RC();
+                //Sites
 
                 rc.getURL();
             }
         });
     }
 
-    public static void main(String[] args) {
+    public void main(String[] args) {
         JFrame frame = new JFrame("RCValidator");
         frame.setContentPane(new RCValidator().RCPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+
+        //comboSites = new JComboBox();
+        String[] domains = rc.getSitesList();
+        for (int i = 0; i < domains.length; i++) {
+            System.out.printf("   :: " + domains[i]);
+            model.addElement(domains[i]);
+        }
+        comboSites.setModel(model);
+        comboSites.setSelectedIndex(0);
+
+
         frame.pack();
         frame.setVisible(true);
     }

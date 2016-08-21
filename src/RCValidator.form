@@ -103,14 +103,17 @@
           <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Site: "/>
+          <labelFor value="63451"/>
+          <text value="Dominio: "/>
         </properties>
       </component>
-      <component id="63451" class="javax.swing.JComboBox" binding="comboBox1" default-binding="true">
+      <component id="63451" class="javax.swing.JComboBox" binding="comboSites">
         <constraints>
-          <grid row="5" column="2" row-span="1" col-span="2" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="5" column="2" row-span="1" col-span="3" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <editable value="false"/>
+        </properties>
       </component>
       <vspacer id="cc77a">
         <constraints>
