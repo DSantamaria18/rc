@@ -19,6 +19,7 @@ class RC {
         String query = """SELECT site.domain FROM site ORDER BY site.id """
         def res = thisEnv.getQuery(query)
         String[] result = res.findAll().collect() {it.domain}
+        println("   :: SITES: ${result}")
         return result
     }
 

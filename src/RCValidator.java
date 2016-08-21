@@ -21,8 +21,7 @@ public class RCValidator {
     private JLabel lblSites;
     private JComboBox comboSites;
 
-    private RC rc = new RC();
-    DefaultComboBoxModel model = new DefaultComboBoxModel();
+    private RC rc;
 
     public RCValidator() {
         BUSCARButton.addMouseListener(new MouseAdapter() {
@@ -46,7 +45,7 @@ public class RCValidator {
                 boolean withAttendants = chkAttendants.isSelected();
 
                 //Sites
-
+                rc = new RC();
                 rc.getURL();
             }
         });
@@ -55,20 +54,21 @@ public class RCValidator {
     public void main(String[] args) {
         JFrame frame = new JFrame("RCValidator");
         frame.setContentPane(new RCValidator().RCPanel);
+        frame.setContentPane(RCPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-
-        //comboSites = new JComboBox();
-        String[] domains = rc.getSitesList();
-        for (int i = 0; i < domains.length; i++) {
-            System.out.printf("   :: " + domains[i]);
-            model.addElement(domains[i]);
-        }
-        comboSites.setModel(model);
-        comboSites.setSelectedIndex(0);
-
-
         frame.pack();
         frame.setVisible(true);
+    }
+
+
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
+        comboSites = new JComboBox();
+        RC rc = new RC();
+        String[] dominios = rc.getSitesList();
+        for (int i = 0; i < dominios.length; i++) {
+            comboSites.addItem(dominios[i]);
+        }
+
     }
 }
