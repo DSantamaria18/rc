@@ -5,6 +5,8 @@
 import Environment
 import RCValidator
 
+import javax.swing.text.StyledEditorKit.BoldAction
+
 class RC {
 
     def thisEnv = Environment.getInstance()
@@ -23,15 +25,15 @@ class RC {
         return result
     }
 
-    def getURL(int ticketType, Boolean pum, Boolean withAttendants) {
-        String q1 = """select entrada.id from entrada, tipo, evento where entrada.tipo_id = tipo.id and tipo.evento_id = evento.id and entrada.estado = 0
-                    and entrada.cantidad_disponible > 0 """
+    def getURL(int ticketType, Boolean pum, Boolean lar, Boolean withAttendants, Boolean limiteInt) {
 
-        String q2 = " and entrada.fecha_limite_internacional >= now() and evento.fecha_ultimo_minuto >= now() " +
-                "and evento.date >= now() and evento.local_address_required = false " +
-                "and not exists (SELECT parent.local_address_required FROM categoria AS node, categoria AS parent " +
-                "WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.id = evento.categoria_principal_id " +
-                "and parent.local_address_required = true GROUP BY parent.id) "
+        String limiteInternacionalQuery = ""
+        if(limiteInt) {
+            limiteInternacionalQuery = ""
+        }else{
+            limiteInternacionalQuery = " and entrada.fecha_limite_internacional >= now() "
+
+        }
 
         String ticketTypeQuery = ""
         if (ticketType == 0 || ticketType == 2) {
@@ -39,20 +41,35 @@ class RC {
         }
 
         String pumQuery = ""
-
         if (pum) {
-            pumQuery = ""
+            pumQuery = " and (entrada.pum = true or evento.fecha_ultimo_minuto <= now() "
         }else {
-            pumQuery = " and entrada.pum = false "
+            pumQuery = " and entrada.pum = false and evento.fecha_ultimo_minuto > now()"
         }
-        String withAttendantsQuery = " and entrada.id in ( select entrada.id from entrada, tipo, evento where entrada.tipo_id = tipo.id and tipo.evento_id = evento.id and evento.attendant_type_id is not null " +
-                "union SELECT entrada.id FROM entrada, tipo, evento, categoria WHERE entrada.tipo_id = tipo.id AND tipo.evento_id = evento.id AND evento.categoria_principal_id = categoria.id and categoria.attendant_type_id is not null " +
-                "union SELECT entrada.id FROM categoria AS node , categoria AS parent ,entrada, tipo, evento, categoria " +
-                "WHERE entrada.tipo_id = tipo.id and tipo.evento_id = evento.id and evento.categoria_principal_id = categoria.id and " +
-                "node.lft BETWEEN parent.lft AND parent.rgt AND node.id = evento.categoria_principal_id and categoria.attendant_type_id is not null GROUP BY parent.id) "
 
-        String query = q1 + ticketTypeQuery + q2 + pumQuery + withAttendantsQuery
-        //def res = thisEnv.getQuery("Select * from site limit 1")
+        String larQuery = ""
+        if (lar) {
+            larQuery = ""
+        }else {
+            larQuery = """ and evento.local_address_required = false and not exists (SELECT parent.local_address_required FROM categoria AS node, categoria AS parent
+                WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.id = evento.categoria_principal_id and parent.local_address_required = true GROUP BY parent.id) """
+        }
+
+        String withAttendantsQuery = ""
+
+        if (withAttendants) {
+            withAttendantsQuery = ""
+        }else{
+            withAttendantsQuery = " and entrada.id in ( select entrada.id from entrada, tipo, evento where entrada.tipo_id = tipo.id and tipo.evento_id = evento.id and evento.attendant_type_id is not null " +
+                    "union SELECT entrada.id FROM entrada, tipo, evento, categoria WHERE entrada.tipo_id = tipo.id AND tipo.evento_id = evento.id AND evento.categoria_principal_id = categoria.id and categoria.attendant_type_id is not null " +
+                    "union SELECT entrada.id FROM categoria AS node , categoria AS parent ,entrada, tipo, evento, categoria " +
+                    "WHERE entrada.tipo_id = tipo.id and tipo.evento_id = evento.id and evento.categoria_principal_id = categoria.id and " +
+                    "node.lft BETWEEN parent.lft AND parent.rgt AND node.id = evento.categoria_principal_id and categoria.attendant_type_id is not null GROUP BY parent.id) "
+        }
+
+        String query = """select entrada.id from entrada, tipo, evento where entrada.tipo_id = tipo.id and tipo.evento_id = evento.id and entrada.estado = 0
+                    and entrada.cantidad_disponible > 0 and evento.date >= now() ${ticketTypeQuery} ${limiteInternacionalQuery} ${pumQuery} ${larQuery} ${withAttendantsQuery}"""
+
         def res = thisEnv.getQuery(query)
         println("   :: QUERY: ${query}")
         println("   :: RESULTADO: ${res}")

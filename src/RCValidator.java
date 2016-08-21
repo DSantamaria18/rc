@@ -14,7 +14,7 @@ public class RCValidator {
     private JCheckBox chkPUM;
     private JCheckBox chkLar;
     private JCheckBox chkAttendants;
-    private JCheckBox checkBox1;
+    private JCheckBox chkLimiteInt;
     private JTextField textField2;
     private JButton BUSCARButton;
     private JPanel RCPanel;
@@ -43,10 +43,11 @@ public class RCValidator {
                 boolean pum = chkPUM.isSelected();
                 boolean lar = chkLar.isSelected();
                 boolean withAttendants = chkAttendants.isSelected();
+                boolean limiteInt = chkLimiteInt.isSelected();
 
                 //Sites
                 rc = new RC();
-                rc.getURL(ticketType, pum, withAttendants);
+                rc.getURL(ticketType, pum, lar, withAttendants, limiteInt);
             }
         });
     }
