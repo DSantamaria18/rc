@@ -14,11 +14,21 @@ class RC {
     def getURL() {
         println("   :: BUSCANDO...")
         def thisEnv = Environment.getInstance()
+
+
+
+        String withAttendantsQuery = "and entrada.id in ( select entrada.id from entrada, tipo, evento where entrada.tipo_id = tipo.id and tipo.evento_id = evento.id and evento.attendant_type_id is not null " +
+                "union SELECT entrada.id FROM entrada, tipo, evento, categoria WHERE entrada.tipo_id = tipo.id AND tipo.evento_id = evento.id AND evento.categoria_principal_id = categoria.id and categoria.attendant_type_id is not null " +
+                "union SELECT entrada.id FROM categoria AS node , categoria AS parent ,entrada, tipo, evento, categoria " +
+                "WHERE entrada.tipo_id = tipo.id and tipo.evento_id = evento.id and evento.categoria_principal_id = categoria.id and " +
+                "node.lft BETWEEN parent.lft AND parent.rgt AND node.id = evento.categoria_principal_id and categoria.attendant_type_id is not null GROUP BY parent.id) "
+
         def res = thisEnv.getQuery("Select * from site limit 1")
         println("   :: RESULTADO: ${res}")
     }
 
-    static def findTicketId(TicketType type, int num = 1, boolean withAttendants = false) {
+    /*
+    static def findTicketId(int type, int num = 1, boolean withAttendants = false) {
         String query = "select entrada.id from entrada, tipo, evento where entrada.tipo_id = tipo.id " +
                 "and tipo.evento_id = evento.id and entrada.estado = 0 and entrada.cantidad_disponible > 0 " +
                 "and entrada.pum = false and entrada.tipo_entrada = ${type.type} and " +
@@ -63,5 +73,6 @@ class RC {
         Collections.shuffle(res)
         return res[0..num - 1]["id"]
     }
+    */
 
 }
