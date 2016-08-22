@@ -15,7 +15,7 @@ public class RCValidator {
     private JCheckBox chkLar;
     private JCheckBox chkAttendants;
     private JCheckBox chkLimiteInt;
-    private JTextField textField2;
+    private JTextField textResult;
     private JButton BUSCARButton;
     private JPanel RCPanel;
     private JLabel lblSites;
@@ -46,8 +46,12 @@ public class RCValidator {
                 boolean limiteInt = chkLimiteInt.isSelected();
 
                 //Sites
+                String domain = comboSites.getSelectedItem().toString();
+
+                textResult.setText("");
                 rc = new RC();
-                rc.getURL(ticketType, pum, lar, withAttendants, limiteInt);
+                String res =  rc.getURL(ticketType, pum, lar, withAttendants, limiteInt, domain);
+                textResult.setText(res);
             }
         });
     }

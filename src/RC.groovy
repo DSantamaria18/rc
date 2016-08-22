@@ -25,31 +25,31 @@ class RC {
         return result
     }
 
-    def getURL(int ticketType, Boolean pum, Boolean lar, Boolean withAttendants, Boolean limiteInt) {
+    String getURL(int ticketType, Boolean pum, Boolean lar, Boolean withAttendants, Boolean limiteInt, String domain) {
 
         String limiteInternacionalQuery = ""
         if(limiteInt) {
-            limiteInternacionalQuery = ""
+            limiteInternacionalQuery = " and entrada.fecha_limite_internacional < now() "
         }else{
             limiteInternacionalQuery = " and entrada.fecha_limite_internacional >= now() "
-
         }
 
         String ticketTypeQuery = ""
         if (ticketType == 0 || ticketType == 2) {
-            ticketTypeQuery = " and entrada.tipo_entrada = ${ticketType}"
+            ticketTypeQuery = " and entrada.tipo_entrada = ${ticketType} "
         }
 
         String pumQuery = ""
         if (pum) {
-            pumQuery = " and (entrada.pum = true or evento.fecha_ultimo_minuto <= now() "
+            pumQuery = " and (entrada.pum = true or evento.fecha_ultimo_minuto <= now()) "
         }else {
             pumQuery = " and entrada.pum = false and evento.fecha_ultimo_minuto > now()"
         }
 
         String larQuery = ""
         if (lar) {
-            larQuery = ""
+            larQuery = """ and evento.local_address_required = false or exists (SELECT parent.local_address_required FROM categoria AS node, categoria AS parent
+                WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.id = evento.categoria_principal_id and parent.local_address_required = true GROUP BY parent.id) """
         }else {
             larQuery = """ and evento.local_address_required = false and not exists (SELECT parent.local_address_required FROM categoria AS node, categoria AS parent
                 WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.id = evento.categoria_principal_id and parent.local_address_required = true GROUP BY parent.id) """
@@ -58,9 +58,13 @@ class RC {
         String withAttendantsQuery = ""
 
         if (withAttendants) {
-            withAttendantsQuery = ""
+            withAttendantsQuery =" and entrada.id in ( select entrada.id from entrada, tipo, evento where entrada.tipo_id = tipo.id and tipo.evento_id = evento.id and evento.attendant_type_id is not null " +
+                    "union SELECT entrada.id FROM entrada, tipo, evento, categoria WHERE entrada.tipo_id = tipo.id AND tipo.evento_id = evento.id AND evento.categoria_principal_id = categoria.id and categoria.attendant_type_id is not null " +
+                    "union SELECT entrada.id FROM categoria AS node , categoria AS parent ,entrada, tipo, evento, categoria " +
+                    "WHERE entrada.tipo_id = tipo.id and tipo.evento_id = evento.id and evento.categoria_principal_id = categoria.id and " +
+                    "node.lft BETWEEN parent.lft AND parent.rgt AND node.id = evento.categoria_principal_id and categoria.attendant_type_id is not null GROUP BY parent.id) "
         }else{
-            withAttendantsQuery = " and entrada.id in ( select entrada.id from entrada, tipo, evento where entrada.tipo_id = tipo.id and tipo.evento_id = evento.id and evento.attendant_type_id is not null " +
+            withAttendantsQuery = " and entrada.id NOT in ( select entrada.id from entrada, tipo, evento where entrada.tipo_id = tipo.id and tipo.evento_id = evento.id and evento.attendant_type_id is not null " +
                     "union SELECT entrada.id FROM entrada, tipo, evento, categoria WHERE entrada.tipo_id = tipo.id AND tipo.evento_id = evento.id AND evento.categoria_principal_id = categoria.id and categoria.attendant_type_id is not null " +
                     "union SELECT entrada.id FROM categoria AS node , categoria AS parent ,entrada, tipo, evento, categoria " +
                     "WHERE entrada.tipo_id = tipo.id and tipo.evento_id = evento.id and evento.categoria_principal_id = categoria.id and " +
@@ -68,11 +72,18 @@ class RC {
         }
 
         String query = """select entrada.id from entrada, tipo, evento where entrada.tipo_id = tipo.id and tipo.evento_id = evento.id and entrada.estado = 0
-                    and entrada.cantidad_disponible > 0 and evento.date >= now() ${ticketTypeQuery} ${limiteInternacionalQuery} ${pumQuery} ${larQuery} ${withAttendantsQuery}"""
+                    and entrada.cantidad_disponible > 0 and evento.date >= now() ${ticketTypeQuery} ${limiteInternacionalQuery} ${pumQuery} ${larQuery} ${withAttendantsQuery} ORDER BY entrada.id LIMIT 200 """
 
         def res = thisEnv.getQuery(query)
         println("   :: QUERY: ${query}")
         println("   :: RESULTADO: ${res}")
+
+        Collections.shuffle(res)
+        def ticketId = res[0]['id']
+
+        String url = "https://${domain}/checkout/buy/${ticketId}"
+        println("   :: URL: ${url}")
+        return url
     }
 
     /*
