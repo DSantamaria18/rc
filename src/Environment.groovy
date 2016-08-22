@@ -32,7 +32,8 @@ enum Env {
     //private
     Session createSession() {
         try {
-            String privateKey = 'C:\\Users\\Roberto\\Documents\\Keys\\openssh_nopass.key'
+            //String privateKey = 'C:\\Users\\Roberto\\Documents\\Keys\\openssh_nopass.key'
+            String privateKey = 'C:\\Users\\David\\Documents\\Ticketbis\\Settings\\openssh_nopass.key'
             Properties config = new Properties()
             config.put("StrictHostKeyChecking", "no")
             JSch jsch = new JSch()

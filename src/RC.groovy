@@ -48,11 +48,11 @@ class RC {
 
         String larQuery = ""
         if (lar) {
-            larQuery = """ and evento.local_address_required = false or exists (SELECT parent.local_address_required FROM categoria AS node, categoria AS parent
-                WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.id = evento.categoria_principal_id and parent.local_address_required = true GROUP BY parent.id) """
+            larQuery = """ and (evento.local_address_required = true or exists (SELECT parent.local_address_required FROM categoria AS node, categoria AS parent
+                WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.id = evento.categoria_principal_id and parent.local_address_required = true GROUP BY parent.id)) """
         }else {
-            larQuery = """ and evento.local_address_required = false and not exists (SELECT parent.local_address_required FROM categoria AS node, categoria AS parent
-                WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.id = evento.categoria_principal_id and parent.local_address_required = true GROUP BY parent.id) """
+            larQuery = """ and (evento.local_address_required = false and not exists (SELECT parent.local_address_required FROM categoria AS node, categoria AS parent
+                WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.id = evento.categoria_principal_id and parent.local_address_required = true GROUP BY parent.id)) """
         }
 
         String withAttendantsQuery = ""
@@ -72,7 +72,7 @@ class RC {
         }
 
         String query = """select entrada.id from entrada, tipo, evento where entrada.tipo_id = tipo.id and tipo.evento_id = evento.id and entrada.estado = 0
-                    and entrada.cantidad_disponible > 0 and evento.date >= now() ${ticketTypeQuery} ${limiteInternacionalQuery} ${pumQuery} ${larQuery} ${withAttendantsQuery} ORDER BY entrada.id LIMIT 200 """
+                    and entrada.cantidad_disponible > 0 and evento.date >= now() ${ticketTypeQuery} ${limiteInternacionalQuery} ${larQuery} ${withAttendantsQuery} ${pumQuery} ORDER BY entrada.id LIMIT 200 """
 
         println("   :: QUERY: ${query}")
         def res = thisEnv.getQuery(query)
