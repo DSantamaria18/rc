@@ -74,14 +74,18 @@ class RC {
         String query = """select entrada.id from entrada, tipo, evento where entrada.tipo_id = tipo.id and tipo.evento_id = evento.id and entrada.estado = 0
                     and entrada.cantidad_disponible > 0 and evento.date >= now() ${ticketTypeQuery} ${limiteInternacionalQuery} ${pumQuery} ${larQuery} ${withAttendantsQuery} ORDER BY entrada.id LIMIT 200 """
 
-        def res = thisEnv.getQuery(query)
         println("   :: QUERY: ${query}")
+        def res = thisEnv.getQuery(query)
         println("   :: RESULTADO: ${res}")
 
-        Collections.shuffle(res)
-        def ticketId = res[0]['id']
-
-        String url = "https://${domain}/checkout/buy/${ticketId}"
+        String url = ""
+        if (!res.isEmpty()){
+            Collections.shuffle(res)
+            def ticketId = res[0]['id']
+            url = "https://${domain}/checkout/buy/${ticketId}"
+        } else {
+            url = "NO SE HAN ENCONTRADO ENTRADAS..."
+        }
         println("   :: URL: ${url}")
         return url
     }
