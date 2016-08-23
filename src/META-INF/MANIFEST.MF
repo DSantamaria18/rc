@@ -1,0 +1,62 @@
+Manifest-Version: 1.0
+Class-Path: mysql-connector-java-5.1.22-bin.jar grails-aether-2.4.5.ja
+ r grails-async-2.4.5.jar grails-bootstrap-2.4.5.jar grails-core-2.4.5
+ .jar grails-databinding-2.4.5.jar grails-docs-2.4.5.jar grails-encode
+ r-2.4.5.jar grails-logging-2.4.5.jar grails-plugin-async-2.4.5.jar gr
+ ails-plugin-codecs-2.4.5.jar grails-plugin-controllers-2.4.5.jar grai
+ ls-plugin-converters-2.4.5.jar grails-plugin-databinding-2.4.5.jar gr
+ ails-plugin-datasource-2.4.5.jar grails-plugin-domain-class-2.4.5.jar
+  grails-plugin-filters-2.4.5.jar grails-plugin-gsp-2.4.5.jar grails-p
+ lugin-i18n-2.4.5.jar grails-plugin-log4j-2.4.5.jar grails-plugin-mime
+ types-2.4.5.jar grails-plugin-rest-2.4.5.jar grails-plugin-services-2
+ .4.5.jar grails-plugin-servlets-2.4.5.jar grails-plugin-testing-2.4.5
+ .jar grails-plugin-url-mappings-2.4.5.jar grails-plugin-validation-2.
+ 4.5.jar grails-project-api-2.4.5.jar grails-resources-2.4.5.jar grail
+ s-scripts-2.4.5.jar grails-spring-2.4.5.jar grails-test-2.4.5.jar gra
+ ils-validation-2.4.5.jar grails-web-2.4.5.jar grails-web-common-2.4.5
+ .jar grails-web-databinding-2.4.5.jar grails-web-databinding-spring-2
+ .4.5.jar grails-web-fileupload-2.4.5.jar grails-web-gsp-2.4.5.jar gra
+ ils-web-gsp-taglib-2.4.5.jar grails-web-jsp-2.4.5.jar grails-web-mvc-
+ 2.4.5.jar grails-web-sitemesh-2.4.5.jar grails-web-url-mappings-2.4.5
+ .jar grails-wrapper-2.4.5.jar grails-wrapper-support-2.4.5.jar aopall
+ iance-1.0.jar asm-3.3.1.jar bcmail-jdk14-138.jar bcprov-jdk14-138.jar
+  cglib-2.2.2.jar jsr305-1.3.9.jar gson-2.2.4.jar guava-10.0.1.jar pro
+ tobuf-java-2.5.0.jar concurrentlinkedhashmap-lru-1.4.jar json-simple-
+ 1.1.jar h2-1.3.176.jar itext-2.0.8.jar commons-cli-1.2.jar commons-co
+ dec-1.6.jar commons-collections-3.2.1.jar commons-fileupload-1.3.1.ja
+ r commons-io-2.2.jar commons-lang-2.6.jar commons-validator-1.4.0.jar
+  hsqldb-1.8.0.10.jar jsr250-api-1.0.jar cdi-api-1.0.jar javax.inject-
+ 1.jar javax.servlet-api-3.0.1.jar jsp-api-2.0.jar jsp-api-2.1.jar jta
+ -1.1.jar jline-2.12.jar junit-4.11.jar log4j-1.2.17.jar jna-4.0.0.jar
+  sitemesh-2.4.jar ant-1.8.4.jar ant-junit-1.8.4.jar ant-launcher-1.8.
+ 4.jar ant-trax-1.7.1.jar httpclient-4.2.6.jar httpcore-4.2.5.jar ivy-
+ 2.3.0.jar maven-aether-provider-3.2.5.jar maven-model-3.2.5.jar maven
+ -model-builder-3.2.5.jar maven-repository-metadata-3.2.5.jar maven-se
+ ttings-3.2.5.jar maven-settings-builder-3.2.5.jar tomcat-jdbc-7.0.50.
+ jar tomcat-juli-7.0.50.jar tomcat-embed-logging-log4j-7.0.50.jar aspe
+ ctjrt-1.8.4.jar aspectjweaver-1.8.4.jar bcpg-jdk15-1.45.jar bcprov-jd
+ k15-1.45.jar gant_groovy1.8-1.9.6.jar gpars-1.2.1.jar groovy-all-2.3.
+ 11.jar jsr166y-1.7.0.jar plexus-classworlds-2.4.jar plexus-component-
+ annotations-1.5.5.jar plexus-interpolation-1.21.jar plexus-utils-3.0.
+ 20.jar aether-api-1.0.2.v20150114.jar aether-connector-basic-1.0.2.v2
+ 0150114.jar aether-impl-1.0.2.v20150114.jar aether-spi-1.0.2.v2015011
+ 4.jar aether-transport-file-1.0.2.v20150114.jar aether-transport-http
+ -1.0.2.v20150114.jar aether-util-1.0.2.v20150114.jar org.eclipse.sisu
+ .inject-0.0.0.M5.jar org.eclipse.sisu.plexus-0.0.0.M5.jar jansi-1.11.
+ jar grails-datastore-core-3.1.4.RELEASE.jar grails-datastore-gorm-3.1
+ .4.RELEASE.jar grails-datastore-simple-3.1.4.RELEASE.jar grails-gdoc-
+ engine-1.0.1.jar hamcrest-core-1.3.jar hibernate-jpa-2.1-api-1.0.0.Fi
+ nal.jar jsoup-1.7.3.jar objenesis-1.4.jar jcl-over-slf4j-1.7.5.jar ju
+ l-to-slf4j-1.7.5.jar slf4j-api-1.7.5.jar slf4j-simple-1.7.5.jar plexu
+ s-cipher-1.4.jar plexus-sec-dispatcher-1.3.jar sisu-guice-3.1.0-no_ao
+ p.jar spock-core-0.7-groovy-2.0.jar spring-aop-4.0.9.RELEASE.jar spri
+ ng-aspects-4.0.9.RELEASE.jar spring-beans-4.0.9.RELEASE.jar spring-co
+ ntext-4.0.9.RELEASE.jar spring-context-support-4.0.9.RELEASE.jar spri
+ ng-core-4.0.9.RELEASE.jar spring-expression-4.0.9.RELEASE.jar spring-
+ jdbc-4.0.9.RELEASE.jar spring-test-4.0.9.RELEASE.jar spring-tx-4.0.9.
+ RELEASE.jar spring-web-4.0.9.RELEASE.jar spring-webmvc-4.0.9.RELEASE.
+ jar springloaded-1.2.3.RELEASE.jar org.springframework.uaa.client-1.0
+ .1.RELEASE.jar core-renderer-R8.jar snakeyaml-1.8.jar serializer-2.7.
+ 2.jar jsch-0.1.53.jar
+Main-Class: main
+
