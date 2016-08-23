@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.event.ContainerAdapter;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by David on 20/08/2016.
@@ -20,6 +22,8 @@ public class RCValidator {
     private JPanel RCPanel;
     private JLabel lblSites;
     private JComboBox comboSites;
+    private JButton REPORTARButton;
+    private JTextArea txtReport;
 
     private RC rc;
 
@@ -52,6 +56,51 @@ public class RCValidator {
                 rc = new RC();
                 String res =  rc.getURL(ticketType, pum, lar, withAttendants, limiteInt, domain);
                 textResult.setText(res);
+            }
+        });
+        REPORTARButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                String url = textResult.getText();
+                Map<String, String> condiciones = new HashMap<String, String>();
+
+                // Tipo de entrada
+                if (rbEticket.isSelected()) {
+                    condiciones.put("Tipo", "E-Ticket");
+                } else {
+                    if (rdTicketNormal.isSelected()){
+                        condiciones.put("Tipo", "NORMAL");
+                    } else {
+                        condiciones.put("Tipo", "SIN ESPECIFICAR");
+                    }
+                }
+
+                // Condiciones
+                if (chkPUM.isSelected()){
+                    condiciones.put("PUM", "TRUE");
+                } else {
+                    condiciones.put("PUM", "FALSE");
+                }
+
+                if (chkLar.isSelected()){
+                    condiciones.put("LAR", "TRUE");
+                } else {
+                    condiciones.put("LAR", "FALSE");
+                }
+
+                if (chkAttendants.isSelected()){
+                    condiciones.put("WITH ATTENDATNS", "TRUE");
+                } else {
+                    condiciones.put("WITH ATTENDATNS", "FALSE");
+                }
+
+                if (chkLimiteInt.isSelected()){
+                    condiciones.put("LIMITE INT", "TRUE");
+                } else {
+                    condiciones.put("LIMITE INT", "FALSE");
+                }
+                txtReport.setText(rc.getReportTemplate(url, condiciones));
             }
         });
     }

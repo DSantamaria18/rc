@@ -90,6 +90,21 @@ class RC {
         return url
     }
 
+    String getReportTemplate(String url, Map<String,String> condiciones){
+        String template ="""Site:  {CODE}{CODE}
+Event: {CODE}{CODE}
+User:  {CODE}{CODE}
+Result: {CODE}{CODE}
+Expected result:   {CODE}{CODE}
+
+How to reproduce the error:
+
+Step 1: {CODE}{CODE}
+Step 2: {CODE}{CODE}
+Step 3: {CODE}{CODE}"""
+
+    }
+
     /*
     static def findTicketId(int type, int num = 1, boolean withAttendants = false) {
         String query = "select entrada.id from entrada, tipo, evento where entrada.tipo_id = tipo.id " +
