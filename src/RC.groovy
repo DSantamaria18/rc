@@ -9,7 +9,8 @@ import javax.swing.text.StyledEditorKit.BoldAction
 
 class RC {
 
-    def thisEnv = Environment.getInstance()
+    Environment thisEnv = Environment.getInstance()
+    def currentTicket = [:]
 
     def start() {
         Environment entorno = Environment.createInstance(environment: Env.QA)
@@ -26,6 +27,13 @@ class RC {
     }
 
     String getURL(int ticketType, Boolean pum, Boolean lar, Boolean withAttendants, Boolean limiteInt, String domain) {
+
+        currentTicket['site'] = domain
+        currentTicket['pum'] = pum.toString()
+        currentTicket['lar'] = lar.toString()
+        currentTicket['att'] = withAttendants.toString()
+        currentTicket['limit'] = limiteInt.toString()
+
 
         String limiteInternacionalQuery = ""
         if(limiteInt) {
@@ -56,7 +64,6 @@ class RC {
         }
 
         String withAttendantsQuery = ""
-
         if (withAttendants) {
             withAttendantsQuery =" and entrada.id in ( select entrada.id from entrada, tipo, evento where entrada.tipo_id = tipo.id and tipo.evento_id = evento.id and evento.attendant_type_id is not null " +
                     "union SELECT entrada.id FROM entrada, tipo, evento, categoria WHERE entrada.tipo_id = tipo.id AND tipo.evento_id = evento.id AND evento.categoria_principal_id = categoria.id and categoria.attendant_type_id is not null " +
@@ -71,7 +78,7 @@ class RC {
                     "node.lft BETWEEN parent.lft AND parent.rgt AND node.id = evento.categoria_principal_id and categoria.attendant_type_id is not null GROUP BY parent.id) "
         }
 
-        String query = """select entrada.id from entrada, tipo, evento where entrada.tipo_id = tipo.id and tipo.evento_id = evento.id and entrada.estado = 0
+        String query = """select entrada.id as ticketId, evento.id as eventId from entrada, tipo, evento where entrada.tipo_id = tipo.id and tipo.evento_id = evento.id and entrada.estado = 0
                     and entrada.cantidad_disponible > 0 and evento.date >= now() ${ticketTypeQuery} ${limiteInternacionalQuery} ${larQuery} ${withAttendantsQuery} ${pumQuery} ORDER BY entrada.id LIMIT 200 """
 
         println("   :: QUERY: ${query}")
@@ -81,18 +88,30 @@ class RC {
         String url = ""
         if (!res.isEmpty()){
             Collections.shuffle(res)
-            def ticketId = res[0]['id']
+            def ticketId = res[0]['ticketId']
             url = "https://${domain}/checkout/buy/${ticketId}"
+            currentTicket['ticketId'] = ticketId.toString()
+            currentTicket['eventId'] = res[0]['eventId']
         } else {
             url = "NO SE HAN ENCONTRADO ENTRADAS..."
+            currentTicket['ticketId'] = "NULL"
         }
         println("   :: URL: ${url}")
+        println("   :: CURRENT TICKET: ${currentTicket}")
         return url
     }
 
     String getReportTemplate(String url, Map<String,String> condiciones){
-        String template ="""Site:  {CODE}{CODE}
-Event: {CODE}{CODE}
+        String template ="""
+Site:  {CODE}${url}{CODE}
+
+Ticket Details:
+    PUM: ${currentTicket['pum']}
+    LAR: ${currentTicket['lar']}
+    WITH ATTENDANTS: ${currentTicket['att']}
+    INT. LIMIT: ${currentTicket['limit']}
+
+Event: {CODE}${currentTicket['eventId']}{CODE}
 User:  {CODE}{CODE}
 Result: {CODE}{CODE}
 Expected result:   {CODE}{CODE}

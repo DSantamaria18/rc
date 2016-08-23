@@ -53,6 +53,7 @@ public class RCValidator {
                 String domain = comboSites.getSelectedItem().toString();
 
                 textResult.setText("");
+                txtReport.setText("");
                 rc = new RC();
                 String res =  rc.getURL(ticketType, pum, lar, withAttendants, limiteInt, domain);
                 textResult.setText(res);
@@ -90,15 +91,15 @@ public class RCValidator {
                 }
 
                 if (chkAttendants.isSelected()){
-                    condiciones.put("WITH ATTENDATNS", "TRUE");
+                    condiciones.put("WITH_ATTENDATNS", "TRUE");
                 } else {
-                    condiciones.put("WITH ATTENDATNS", "FALSE");
+                    condiciones.put("WITH_ATTENDATNS", "FALSE");
                 }
 
                 if (chkLimiteInt.isSelected()){
-                    condiciones.put("LIMITE INT", "TRUE");
+                    condiciones.put("LIMITE_INT", "TRUE");
                 } else {
-                    condiciones.put("LIMITE INT", "FALSE");
+                    condiciones.put("LIMITE_INT", "FALSE");
                 }
                 txtReport.setText(rc.getReportTemplate(url, condiciones));
             }
