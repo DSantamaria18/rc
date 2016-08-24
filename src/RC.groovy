@@ -105,14 +105,15 @@ class RC {
         String template ="""
 Site:  {CODE}${url}{CODE}
 
-Ticket Details:
+Ticket Details:{CODE}
     PUM: ${currentTicket['pum']}
     LAR: ${currentTicket['lar']}
     WITH ATTENDANTS: ${currentTicket['att']}
-    INT. LIMIT: ${currentTicket['limit']}
+    INT. LIMIT: ${currentTicket['limit']}{CODE}
 
 Event: {CODE}${currentTicket['eventId']}{CODE}
-User:  {CODE}{CODE}
+User:  {CODE}N/A{CODE}
+Login Required: {CODE}N/A{CODE}
 Result: {CODE}{CODE}
 Expected result:   {CODE}{CODE}
 
